@@ -66,51 +66,8 @@ pip install streamlit pandas
 streamlit run app.py
 ```
 
-After the server starts, open the URL shown in the terminal (typically `http://localhost:8501`) and fill in the fields to obtain a price prediction.
-
-## Deployment
-### Docker (recommended for reproducibility)
-Create a `Dockerfile` in the repository root:
-
-```Dockerfile
-FROM python:3.11-slim
-
-WORKDIR /app
-
-# Copy only the necessary files
-COPY app.py ./
-COPY requirements.txt ./
-COPY pipeline.pkl ./
-COPY "new car.csv" ./
-
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-EXPOSE 8501
-
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.headless=true"]
-```
-
-Create a `requirements.txt`:
-
-```
-streamlit
-pandas
-```
-
-Build and run the container:
-
-```bash
-docker build -t car-price-prediction .
-docker run -p 8501:8501 car-price-prediction
-```
-
-The app will be reachable at `http://localhost:8501`.
 
 ### Local Production Setup
 1. Ensure the absolute paths in `app.py` point to locations accessible inside your environment, or modify them to relative paths (e.g., `./pipeline.pkl`).
 2. Verify that `pipeline.pkl` contains a scikit‑learn pipeline compatible with the feature columns defined in the UI.
-3. Optionally, set up a reverse proxy (NGINX) to expose the Streamlit service behind HTTPS for public consumption.
 
----
-*This README is generated automatically to reflect the current source code. Any structural changes to the repository should be reflected here to keep the documentation in sync.*
